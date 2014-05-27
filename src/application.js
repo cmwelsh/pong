@@ -3,6 +3,7 @@
 
 window.pong = window.pong || {};
 
+var GameState = window.pong.GameState;
 var Logic = window.pong.Logic;
 var Renderer = window.pong.Renderer;
 var util = window.pong.util;
@@ -15,26 +16,7 @@ function Application(options) {
     throw new Error('Must pass canvas option into application');
   }
   this._canvas = options.canvas;
-  this._gameState = {
-    paddles: {
-      playerOne: 0.5,
-      playerTwo: 0.5
-    },
-    score: {
-      playerOne: 0,
-      playerTwo: 0
-    },
-    ball: {
-      position: {
-        x: 50,
-        y: 50
-      },
-      velocity: {
-        x: 1,
-        y: 1
-      }
-    }
-  };
+  this._gameState = new GameState();
   this._logic = new Logic({
     gameState: this._gameState
   });
@@ -55,6 +37,10 @@ Application.prototype.render = function() {
 };
 
 Application.prototype._resize = function() {
+  this._gameState.resize({
+    width: window.innerWidth,
+    height: window.innerHeight
+  });
   this._renderer.resize();
 };
 
@@ -67,7 +53,7 @@ Application.prototype.run = function() {
     console.log(window.orientation);
   }, false);
 
-  this._renderer.init();
+  this._resize();
   this.render();
 };
 

@@ -18,10 +18,6 @@ function Renderer(options) {
   this._gameState = options.gameState;
 }
 
-Renderer.prototype.init = function() {
-  this.resize();
-};
-
 Renderer.prototype.render = function() {
   this._setSize();
 
@@ -33,15 +29,16 @@ Renderer.prototype.resize = function() {
 };
 
 Renderer.prototype._drawBall = function() {
-  var position = this._gameState.ball.position;
+  var position = this._gameState.getBallPosition();
 
   this._context.fillStyle = 'rgb(200,0,0)';
-  this._context.fillRect(position.x, position.y, 5, 5);
+  this._context.fillRect(position.x - 2, position.y - 2, 4, 4);
 };
 
 Renderer.prototype._setSize = function() {
-  this._canvas.width = window.innerWidth;
-  this._canvas.height = window.innerHeight;
+  var board = this._gameState.getBoard();
+  this._canvas.width = board.width;
+  this._canvas.height = board.height;
 };
 
 window.pong.Renderer = Renderer;
