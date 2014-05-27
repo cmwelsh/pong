@@ -36,6 +36,34 @@ function GameState() {
   };
 }
 
+GameState.prototype.addTouch = function(touch) {
+  var x, y;
+  var board = this._state.board;
+  var paddles = this._state.paddles;
+
+  if (!board.orientation) {
+    x = touch.x;
+    y = touch.y;
+  } else {
+    x = touch.y;
+    y = touch.x;
+  }
+
+  if (!board.orientation) {
+    if (x < board.width / 2) {
+      paddles.playerOne = y / board.height;
+    } else {
+      paddles.playerTwo = y / board.height;
+    }
+  } else {
+    if (x < board.width / 2) {
+      paddles.playerTwo = y / board.height;
+    } else {
+      paddles.playerOne = y / board.height;
+    }
+  }
+};
+
 GameState.prototype.getBallPosition = function() {
   return this._state.ball.position;
 };
@@ -50,6 +78,10 @@ GameState.prototype.getBallVelocity = function() {
 
 GameState.prototype.getBoard = function() {
   return this._state.board;
+};
+
+GameState.prototype.getPaddles = function() {
+  return this._state.paddles;
 };
 
 GameState.prototype.getScore = function() {

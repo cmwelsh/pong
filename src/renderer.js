@@ -29,8 +29,12 @@ Renderer.prototype.render = function() {
     this._context.translate(board.width / 2, board.height / 2);
   }
 
+  this._context.fillStyle = 'rgb(200,0,0)';
+  this._context.font = '20px Georgia';
+
   this._drawBall();
   this._drawLine();
+  this._drawPaddles();
   this._drawScore();
 };
 
@@ -42,7 +46,6 @@ Renderer.prototype._drawBall = function() {
   var ballRadius = this._gameState.getBallRadius();
   var position = this._gameState.getBallPosition();
 
-  this._context.fillStyle = 'rgb(200,0,0)';
   this._fillRect(position.x - ballRadius, position.y - ballRadius, ballRadius * 2, ballRadius * 2);
 };
 
@@ -50,16 +53,24 @@ Renderer.prototype._drawLine = function() {
   var board = this._gameState.getBoard();
   var lineWidth = 2;
 
-  this._context.fillStyle = 'rgb(200,0,0)';
   this._fillRect((board.width / 2) - (lineWidth / 2), 0, lineWidth, board.height);
+};
+
+Renderer.prototype._drawPaddles = function() {
+  var board = this._gameState.getBoard();
+  var paddles = this._gameState.getPaddles();
+  // For display purposes only, the actual collision is against the far side
+  var paddleWidth = 4;
+  var paddleHeight = board.height / 7;
+
+  this._fillRect(0, (paddles.playerOne * board.height) - (paddleHeight / 2), paddleWidth, paddleHeight);
+  this._fillRect(board.width - paddleWidth, (paddles.playerTwo * board.height) - (paddleHeight / 2), paddleWidth, paddleHeight);
 };
 
 Renderer.prototype._drawScore = function() {
   var board = this._gameState.getBoard();
   var score = this._gameState.getScore();
 
-  this._context.font = '20px Georgia';
-  this._context.fillStyle = 'rgb(200,0,0)';
   this._fillText(score.playerOne, board.width / 4, board.height / 2);
   this._fillText(score.playerTwo, board.width / 4 * 3, board.height / 2);
 };

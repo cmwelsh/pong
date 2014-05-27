@@ -46,11 +46,35 @@ Application.prototype._resize = function() {
 };
 
 Application.prototype.run = function() {
+  var mousedown = false;
   window.addEventListener('resize', this._resize, false);
   window.addEventListener('orientationchange', this._resize, false);
-  document.ontouchmove = function(event) {
+  document.addEventListener('mousedown', function(event) {
     event.preventDefault();
-  };
+    mousedown = true;
+  }.bind(this), false);
+  document.addEventListener('mouseup', function(event) {
+    event.preventDefault();
+    mousedown = false;
+  }.bind(this), false);
+  document.addEventListener('mousemove', function(event) {
+    event.preventDefault();
+    if (mousedown) {
+      this._gameState.addTouch({
+        x: event.pageX,
+        y: event.pageY
+      });
+    }
+  }.bind(this), false);
+  document.addEventListener('touchmove', function(event) {
+    event.preventDefault();
+    Array.prototype.forEach.call(event.touches, function(touch) {
+      this._gameState.addTouch({
+        x: touch.pageX,
+        y: touch.pageY
+      });
+    }.bind(this));
+  }.bind(this), false);
 
   this._resize();
   this.render();
