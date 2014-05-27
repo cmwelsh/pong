@@ -10,22 +10,21 @@ function GameState() {
       height: 100,
       orientation: 0
     },
-    paddles: {
-      playerOne: 0.5,
-      playerTwo: 0.5
-    },
     score: {
       playerOne: 0,
       playerTwo: 0
     }
   };
+  this._touches = {
+    playerOne: [],
+    playerTwo: []
+  };
   this.resetBall();
 }
 
-GameState.prototype.addTouch = function(touch) {
+GameState.prototype.touchEnd = function(touch) {
   var x, y;
   var board = this._state.board;
-  var paddles = this._state.paddles;
 
   if (!board.orientation) {
     x = touch.x;
@@ -37,15 +36,69 @@ GameState.prototype.addTouch = function(touch) {
 
   if (!board.orientation) {
     if (x < board.width / 2) {
-      paddles.playerOne = y / board.height;
+      this._touches.playerOne = [];
     } else {
-      paddles.playerTwo = y / board.height;
+      this._touches.playerTwo = [];
     }
   } else {
     if (x < board.width / 2) {
-      paddles.playerTwo = y / board.height;
+      this._touches.playerTwo = [];
     } else {
-      paddles.playerOne = y / board.height;
+      this._touches.playerOne = [];
+    }
+  }
+};
+
+GameState.prototype.touchMove = function(touch) {
+  var x, y;
+  var board = this._state.board;
+
+  if (!board.orientation) {
+    x = touch.x;
+    y = touch.y;
+  } else {
+    x = touch.y;
+    y = touch.x;
+  }
+
+  if (!board.orientation) {
+    if (x < board.width / 2) {
+      this._touches.playerOne.push(y);
+    } else {
+      this._touches.playerTwo.push(y);
+    }
+  } else {
+    if (x < board.width / 2) {
+      this._touches.playerTwo.push(y);
+    } else {
+      this._touches.playerOne.push(y);
+    }
+  }
+};
+
+GameState.prototype.touchStart = function(touch) {
+  var x, y;
+  var board = this._state.board;
+
+  if (!board.orientation) {
+    x = touch.x;
+    y = touch.y;
+  } else {
+    x = touch.y;
+    y = touch.x;
+  }
+
+  if (!board.orientation) {
+    if (x < board.width / 2) {
+      this._touches.playerOne = [y];
+    } else {
+      this._touches.playerTwo = [y];
+    }
+  } else {
+    if (x < board.width / 2) {
+      this._touches.playerTwo = [y];
+    } else {
+      this._touches.playerOne = [y];
     }
   }
 };
@@ -78,6 +131,10 @@ GameState.prototype.getScore = function() {
   return this._state.score;
 };
 
+GameState.prototype.getTouches = function(playerSlug) {
+  return this._touches[playerSlug];
+};
+
 GameState.prototype.increaseScore = function(playerSlug) {
   this._state.score[playerSlug] += 1;
 };
@@ -85,7 +142,7 @@ GameState.prototype.increaseScore = function(playerSlug) {
 GameState.prototype.resetBall = function() {
   var board = this._state.board;
 
-  var ballSpeed = 4;
+  var ballSpeed = 2;
   var ballAngle = Math.random() * (Math.PI / 4) + (Math.PI / 4);
   var velocityX = Math.sin(ballAngle) * ballSpeed;
   var velocityY = Math.cos(ballAngle) * ballSpeed;
@@ -100,6 +157,11 @@ GameState.prototype.resetBall = function() {
       y: (Math.round(Math.random()) ? 1 : -1) * velocityY
     },
     radius: 3
+  };
+
+  this._state.paddles = {
+    playerOne: 0.5,
+    playerTwo: 0.5
   };
 };
 

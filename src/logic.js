@@ -14,6 +14,28 @@ function Logic(options) {
 }
 
 Logic.prototype.tick = function() {
+  this._tickPaddles();
+  this._tickBall();
+};
+
+Logic.prototype._isPaddleHit = function(playerSlug) {
+  var ballPosition = this._gameState.getBallPosition();
+  var ballRadius = this._gameState.getBallRadius();
+  var board = this._gameState.getBoard();
+  var paddles = this._gameState.getPaddles();
+  var paddleY = board.height * paddles[playerSlug];
+  var paddleHeight = this._gameState.getPaddleHeight();
+
+  if (ballPosition.y - ballRadius < paddleY - (paddleHeight / 2)) {
+    return false;
+  }
+  if (ballPosition.y + ballRadius > paddleY + (paddleHeight / 2)) {
+    return false;
+  }
+  return true;
+};
+
+Logic.prototype._tickBall = function() {
   var ballRadius = this._gameState.getBallRadius();
   var board = this._gameState.getBoard();
   var position = this._gameState.getBallPosition();
@@ -50,21 +72,29 @@ Logic.prototype.tick = function() {
   }
 };
 
-Logic.prototype._isPaddleHit = function(playerSlug) {
-  var ballPosition = this._gameState.getBallPosition();
-  var ballRadius = this._gameState.getBallRadius();
+Logic.prototype._tickPaddle = function(playerSlug) {
   var board = this._gameState.getBoard();
+  var touches = this._gameState.getTouches(playerSlug);
   var paddles = this._gameState.getPaddles();
-  var paddleY = board.height * paddles[playerSlug];
   var paddleHeight = this._gameState.getPaddleHeight();
+  var totalTouches = touches.length;
+  if (totalTouches > 1) {
+    var touch1 = touches[totalTouches - 1];
+    var touch2 = touches[totalTouches - 2];
+    var speed = touch1 - touch2;
+    paddles[playerSlug] += speed / board.height;
+    touches.shift();
+    if ((paddles[playerSlug] * board.height) + (paddleHeight / 2) > board.height) {
+      paddles[playerSlug] = (board.height - (paddleHeight / 2)) / board.height;
+    } else if ((paddles[playerSlug] * board.height) - (paddleHeight / 2) < 0) {
+      paddles[playerSlug] = (paddleHeight / 2) / board.height;
+    }
+  }
+};
 
-  if (ballPosition.y - ballRadius < paddleY - (paddleHeight / 2)) {
-    return false;
-  }
-  if (ballPosition.y + ballRadius > paddleY + (paddleHeight / 2)) {
-    return false;
-  }
-  return true;
+Logic.prototype._tickPaddles = function() {
+  this._tickPaddle('playerOne');
+  this._tickPaddle('playerTwo');
 };
 
 window.pong.Logic = Logic;

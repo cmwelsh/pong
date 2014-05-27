@@ -52,24 +52,55 @@ Application.prototype.run = function() {
   document.addEventListener('mousedown', function(event) {
     event.preventDefault();
     mousedown = true;
+    this._gameState.touchStart({
+      x: event.pageX,
+      y: event.pageY
+    });
   }.bind(this), false);
   document.addEventListener('mouseup', function(event) {
     event.preventDefault();
     mousedown = false;
+    this._gameState.touchEnd({
+      x: event.pageX,
+      y: event.pageY
+    });
   }.bind(this), false);
   document.addEventListener('mousemove', function(event) {
     event.preventDefault();
     if (mousedown) {
-      this._gameState.addTouch({
+      this._gameState.touchMove({
         x: event.pageX,
         y: event.pageY
       });
     }
   }.bind(this), false);
+  document.addEventListener('touchstart', function(event) {
+    event.preventDefault();
+    this._gameState.touchStart({
+      x: event.pageX,
+      y: event.pageY
+    });
+  }.bind(this), false);
+  document.addEventListener('touchend', function(event) {
+    Array.prototype.forEach.call(event.changedTouches, function(touch) {
+      this._gameState.touchEnd({
+        x: touch.pageX,
+        y: touch.pageY
+      });
+    }.bind(this));
+  }.bind(this), false);
+  document.addEventListener('touchcancel', function(event) {
+    Array.prototype.forEach.call(event.changedTouches, function(touch) {
+      this._gameState.touchEnd({
+        x: touch.pageX,
+        y: touch.pageY
+      });
+    }.bind(this));
+  }.bind(this), false);
   document.addEventListener('touchmove', function(event) {
     event.preventDefault();
     Array.prototype.forEach.call(event.touches, function(touch) {
-      this._gameState.addTouch({
+      this._gameState.touchMove({
         x: touch.pageX,
         y: touch.pageY
       });
