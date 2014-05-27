@@ -35,6 +35,16 @@ Logic.prototype._isPaddleHit = function(playerSlug) {
   return true;
 };
 
+Logic.prototype._isSpeedHit = function(playerSlug) {
+  var lastTap = this._gameState.getLastTap(playerSlug);
+
+  if (+new Date() - lastTap < 100) {
+    return true;
+  }
+
+  return false;
+};
+
 Logic.prototype._tickBall = function() {
   var ballRadius = this._gameState.getBallRadius();
   var board = this._gameState.getBoard();
@@ -47,7 +57,11 @@ Logic.prototype._tickBall = function() {
   if (position.x > board.width - ballRadius) {
     if (this._isPaddleHit('playerTwo')) {
       position.x = board.width - ballRadius;
-      velocity.x *= -1;
+      if (this._isSpeedHit('playerTwo')) {
+        velocity.x *= -2;
+      } else {
+        velocity.x *= -1;
+      }
     } else {
       this._gameState.increaseScore('playerOne');
       this._gameState.resetBall();
@@ -56,7 +70,11 @@ Logic.prototype._tickBall = function() {
   if (position.x < ballRadius) {
     if (this._isPaddleHit('playerOne')) {
       position.x = ballRadius;
-      velocity.x *= -1;
+      if (this._isSpeedHit('playerOne')) {
+        velocity.x *= -2;
+      } else {
+        velocity.x *= -1;
+      }
     } else {
       this._gameState.increaseScore('playerTwo');
       this._gameState.resetBall();

@@ -19,6 +19,10 @@ function GameState() {
     playerOne: [],
     playerTwo: []
   };
+  this._lastTap = {
+    playerOne: 0,
+    playerTwo: 0
+  };
   this.resetBall();
 }
 
@@ -90,14 +94,18 @@ GameState.prototype.touchStart = function(touch) {
 
   if (!board.orientation) {
     if (x < board.width / 2) {
+      this._lastTap.playerOne = +new Date();
       this._touches.playerOne = [y];
     } else {
+      this._lastTap.playerTwo = +new Date();
       this._touches.playerTwo = [y];
     }
   } else {
     if (x < board.width / 2) {
+      this._lastTap.playerTwo = +new Date();
       this._touches.playerTwo = [y];
     } else {
+      this._lastTap.playerOne = +new Date();
       this._touches.playerOne = [y];
     }
   }
@@ -117,6 +125,10 @@ GameState.prototype.getBallVelocity = function() {
 
 GameState.prototype.getBoard = function() {
   return this._state.board;
+};
+
+GameState.prototype.getLastTap = function(playerSlug) {
+  return this._lastTap[playerSlug];
 };
 
 GameState.prototype.getPaddleHeight = function() {
