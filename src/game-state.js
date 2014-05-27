@@ -18,7 +18,8 @@ function GameState() {
     },
     board: {
       width: 100,
-      height: 100
+      height: 100,
+      orientation: 0
     },
     paddles: {
       playerOne: 0.5,
@@ -52,8 +53,15 @@ GameState.prototype.getScore = function() {
 };
 
 GameState.prototype.resize = function(options) {
-  this._state.board.width = options.width;
-  this._state.board.height = options.height;
+  if (options.width > options.height) {
+    this._state.board.width = options.width;
+    this._state.board.height = options.height;
+    this._state.board.orientation = 0;
+  } else {
+    this._state.board.height = options.width;
+    this._state.board.width = options.height;
+    this._state.board.orientation = 90;
+  }
 };
 
 window.pong.GameState = GameState;
