@@ -3,6 +3,7 @@
 
 window.pong = window.pong || {};
 
+var Logic = window.pong.Logic;
 var Renderer = window.pong.Renderer;
 var util = window.pong.util;
 
@@ -34,6 +35,9 @@ function Application(options) {
       }
     }
   };
+  this._logic = new Logic({
+    gameState: this._gameState
+  });
   this._renderer = new Renderer({
     gameState: this._gameState,
     canvas: this._canvas
@@ -46,6 +50,7 @@ function Application(options) {
 Application.prototype.render = function() {
   window.requestAnimationFrame(this.render);
 
+  this._logic.tick();
   this._renderer.render();
 };
 

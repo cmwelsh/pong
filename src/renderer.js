@@ -25,13 +25,18 @@ Renderer.prototype.init = function() {
 Renderer.prototype.render = function() {
   this._setSize();
 
-  this._context.fillStyle = 'rgb(200,0,0)';
-  this._context.fillRect(10, 10, 50, 50);
-  //this._drawBall();
+  this._drawBall();
 };
 
 Renderer.prototype.resize = function() {
   this._setSize();
+};
+
+Renderer.prototype._drawBall = function() {
+  var position = this._gameState.ball.position;
+
+  this._context.fillStyle = 'rgb(200,0,0)';
+  this._context.fillRect(position.x, position.y, 5, 5);
 };
 
 Renderer.prototype._setSize = function() {
