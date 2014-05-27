@@ -4,6 +4,10 @@
 window.pong = window.pong || {};
 
 function GameState() {
+  var ballSpeed = 4;
+  var ballAngle = Math.random() * (Math.PI / 4) + (Math.PI / 4);
+  var velocityX = Math.sin(ballAngle) * ballSpeed;
+  var velocityY = Math.cos(ballAngle) * ballSpeed;
   this._state = {
     ball: {
       position: {
@@ -11,8 +15,8 @@ function GameState() {
         y: 50
       },
       velocity: {
-        x: Math.round(Math.random()) ? 1 : -1,
-        y: Math.round(Math.random()) ? 1 : -1
+        x: (Math.round(Math.random()) ? 1 : -1) * velocityX,
+        y: (Math.round(Math.random()) ? 1 : -1) * velocityY
       },
       radius: 3
     },

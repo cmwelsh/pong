@@ -23,19 +23,19 @@ Logic.prototype.tick = function() {
 
   if (position.x > board.width - ballRadius) {
     position.x = board.width - ballRadius;
-    velocity.x = -1;
+    velocity.x *= -1;
   }
   if (position.x < ballRadius) {
     position.x = ballRadius;
-    velocity.x = 1;
+    velocity.x *= -1;
   }
   if (position.y > board.height - ballRadius) {
     position.y = board.height - ballRadius;
-    velocity.y = -1;
+    velocity.y *= -1;
   }
   if (position.y < ballRadius) {
     position.y = ballRadius;
-    velocity.y = 1;
+    velocity.y *= -1;
   }
 };
 
