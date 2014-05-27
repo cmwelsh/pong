@@ -61,7 +61,7 @@ Renderer.prototype._drawPaddles = function() {
   var paddles = this._gameState.getPaddles();
   // For display purposes only, the actual collision is against the far side
   var paddleWidth = 4;
-  var paddleHeight = board.height / 7;
+  var paddleHeight = this._gameState.getPaddleHeight();
 
   this._fillRect(0, (paddles.playerOne * board.height) - (paddleHeight / 2), paddleWidth, paddleHeight);
   this._fillRect(board.width - paddleWidth, (paddles.playerTwo * board.height) - (paddleHeight / 2), paddleWidth, paddleHeight);

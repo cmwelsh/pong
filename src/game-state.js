@@ -4,22 +4,7 @@
 window.pong = window.pong || {};
 
 function GameState() {
-  var ballSpeed = 4;
-  var ballAngle = Math.random() * (Math.PI / 4) + (Math.PI / 4);
-  var velocityX = Math.sin(ballAngle) * ballSpeed;
-  var velocityY = Math.cos(ballAngle) * ballSpeed;
   this._state = {
-    ball: {
-      position: {
-        x: 50,
-        y: 50
-      },
-      velocity: {
-        x: (Math.round(Math.random()) ? 1 : -1) * velocityX,
-        y: (Math.round(Math.random()) ? 1 : -1) * velocityY
-      },
-      radius: 3
-    },
     board: {
       width: 100,
       height: 100,
@@ -34,6 +19,7 @@ function GameState() {
       playerTwo: 0
     }
   };
+  this.resetBall();
 }
 
 GameState.prototype.addTouch = function(touch) {
@@ -80,12 +66,41 @@ GameState.prototype.getBoard = function() {
   return this._state.board;
 };
 
+GameState.prototype.getPaddleHeight = function() {
+  return this._state.board.height / 7;
+};
+
 GameState.prototype.getPaddles = function() {
   return this._state.paddles;
 };
 
 GameState.prototype.getScore = function() {
   return this._state.score;
+};
+
+GameState.prototype.increaseScore = function(playerSlug) {
+  this._state.score[playerSlug] += 1;
+};
+
+GameState.prototype.resetBall = function() {
+  var board = this._state.board;
+
+  var ballSpeed = 4;
+  var ballAngle = Math.random() * (Math.PI / 4) + (Math.PI / 4);
+  var velocityX = Math.sin(ballAngle) * ballSpeed;
+  var velocityY = Math.cos(ballAngle) * ballSpeed;
+
+  this._state.ball = {
+    position: {
+      x: board.width / 2,
+      y: board.height / 2
+    },
+    velocity: {
+      x: (Math.round(Math.random()) ? 1 : -1) * velocityX,
+      y: (Math.round(Math.random()) ? 1 : -1) * velocityY
+    },
+    radius: 3
+  };
 };
 
 GameState.prototype.resize = function(options) {
