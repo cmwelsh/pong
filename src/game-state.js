@@ -13,7 +13,8 @@ function GameState() {
       velocity: {
         x: 1,
         y: 1
-      }
+      },
+      radius: 3
     },
     board: {
       width: 100,
@@ -32,6 +33,10 @@ function GameState() {
 
 GameState.prototype.getBallPosition = function() {
   return this._state.ball.position;
+};
+
+GameState.prototype.getBallRadius = function() {
+  return this._state.ball.radius;
 };
 
 GameState.prototype.getBallVelocity = function() {

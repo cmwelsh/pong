@@ -29,10 +29,11 @@ Renderer.prototype.resize = function() {
 };
 
 Renderer.prototype._drawBall = function() {
+  var ballRadius = this._gameState.getBallRadius();
   var position = this._gameState.getBallPosition();
 
   this._context.fillStyle = 'rgb(200,0,0)';
-  this._context.fillRect(position.x - 2, position.y - 2, 4, 4);
+  this._context.fillRect(position.x - ballRadius, position.y - ballRadius, ballRadius * 2, ballRadius * 2);
 };
 
 Renderer.prototype._setSize = function() {

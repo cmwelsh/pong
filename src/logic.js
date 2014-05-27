@@ -14,26 +14,27 @@ function Logic(options) {
 }
 
 Logic.prototype.tick = function() {
+  var ballRadius = this._gameState.getBallRadius();
   var board = this._gameState.getBoard();
   var position = this._gameState.getBallPosition();
   var velocity = this._gameState.getBallVelocity();
   position.x += velocity.x;
   position.y += velocity.y;
 
-  if (position.x > board.width - 2) {
-    position.x = board.width - 2;
+  if (position.x > board.width - ballRadius) {
+    position.x = board.width - ballRadius;
     velocity.x = -1;
   }
-  if (position.x < 2) {
-    position.x = 2;
+  if (position.x < ballRadius) {
+    position.x = ballRadius;
     velocity.x = 1;
   }
-  if (position.y > board.height - 2) {
-    position.y = board.height - 2;
+  if (position.y > board.height - ballRadius) {
+    position.y = board.height - ballRadius;
     velocity.y = -1;
   }
-  if (position.y < 2) {
-    position.y = 2;
+  if (position.y < ballRadius) {
+    position.y = ballRadius;
     velocity.y = 1;
   }
 };
