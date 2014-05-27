@@ -27,7 +27,7 @@ function GameState() {
     score: {
       playerOne: 0,
       playerTwo: 0
-    },
+    }
   };
 }
 
@@ -45,6 +45,10 @@ GameState.prototype.getBallVelocity = function() {
 
 GameState.prototype.getBoard = function() {
   return this._state.board;
+};
+
+GameState.prototype.getScore = function() {
+  return this._state.score;
 };
 
 GameState.prototype.resize = function(options) {

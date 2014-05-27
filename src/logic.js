@@ -5,10 +5,10 @@ window.pong = window.pong || {};
 
 function Logic(options) {
   if (typeof options !== 'object') {
-    throw new Error('Must pass options into Renderer');
+    throw new Error('Must pass options into Logic');
   }
   if (!options.gameState) {
-    throw new Error('Must pass gameState into Renderer');
+    throw new Error('Must pass gameState into Logic');
   }
   this._gameState = options.gameState;
 }

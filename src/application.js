@@ -37,6 +37,7 @@ Application.prototype.render = function() {
 };
 
 Application.prototype._resize = function() {
+  //console.log(window.orientation);
   this._gameState.resize({
     width: window.innerWidth,
     height: window.innerHeight
@@ -46,12 +47,10 @@ Application.prototype._resize = function() {
 
 Application.prototype.run = function() {
   window.addEventListener('resize', this._resize, false);
+  window.addEventListener('orientationchange', this._resize, false);
   document.ontouchmove = function(event) {
     event.preventDefault();
   };
-  window.addEventListener('orientationchange', function() {
-    console.log(window.orientation);
-  }, false);
 
   this._resize();
   this.render();

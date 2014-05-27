@@ -12,6 +12,6 @@ window.addEventListener('load', function() {
     canvas: document.getElementById('canvas')
   });
   app.run();
-});
+}, false);
 
 }());
