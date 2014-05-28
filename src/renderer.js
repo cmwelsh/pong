@@ -3,6 +3,8 @@
 
 window.pong = window.pong || {};
 
+// Renders the game state to the provided canvas with orientation modifications
+// applied to the scene.
 function Renderer(options) {
   if (typeof options !== 'object') {
     throw new Error('Must pass options into Renderer');
@@ -18,30 +20,37 @@ function Renderer(options) {
   this._gameState = options.gameState;
 }
 
+// Renders the game scene
 Renderer.prototype.render = function() {
   this._setSize();
 
   var board = this._gameState.getBoard();
+  // Check device orientation
   if (board.orientation) {
+    // Center the canvas on the rotated width and height
     this._context.translate(board.height / 2, board.width / 2);
+    // Rotate game 90 degrees
     this._context.rotate(Math.PI / -2);
   } else {
+    // Center the canvas on the regular width and height
     this._context.translate(board.width / 2, board.height / 2);
   }
 
+  // Use these drawing styles for everything
   this._context.fillStyle = 'rgb(200,0,0)';
   this._context.font = '20px Georgia';
 
+  // Draw ball
   this._drawBall();
+  // Draw center dividing line
   this._drawLine();
+  // Draw player paddles
   this._drawPaddles();
+  // Draw scoreboard
   this._drawScore();
 };
 
-Renderer.prototype.resize = function() {
-  this._setSize();
-};
-
+// Draw the pong ball
 Renderer.prototype._drawBall = function() {
   var ballRadius = this._gameState.getBallRadius();
   var position = this._gameState.getBallPosition();
@@ -49,6 +58,7 @@ Renderer.prototype._drawBall = function() {
   this._fillRect(position.x - ballRadius, position.y - ballRadius, ballRadius * 2, ballRadius * 2);
 };
 
+// Draw the center divider line
 Renderer.prototype._drawLine = function() {
   var board = this._gameState.getBoard();
   var lineWidth = 2;
@@ -56,6 +66,7 @@ Renderer.prototype._drawLine = function() {
   this._fillRect((board.width / 2) - (lineWidth / 2), 0, lineWidth, board.height);
 };
 
+// Draw the player paddles
 Renderer.prototype._drawPaddles = function() {
   var board = this._gameState.getBoard();
   var paddles = this._gameState.getPaddles();
@@ -67,14 +78,22 @@ Renderer.prototype._drawPaddles = function() {
   this._fillRect(board.width - paddleWidth, (paddles.playerTwo * board.height) - (paddleHeight / 2), paddleWidth, paddleHeight);
 };
 
+// Draws the current score of the game
 Renderer.prototype._drawScore = function() {
   var board = this._gameState.getBoard();
   var score = this._gameState.getScore();
 
-  this._fillText(score.playerOne, board.width / 4, board.height / 2);
-  this._fillText(score.playerTwo, board.width / 4 * 3, board.height / 2);
+  if (board.orientation) {
+    this._fillText(score.playerOne, board.width / 4, board.height / 2);
+    this._fillText(score.playerTwo, board.width / 4 * 3, board.height / 2);
+  } else {
+    this._fillText(score.playerOne, board.width / 4, board.height / 2);
+    this._fillText(score.playerTwo, board.width / 4 * 3, board.height / 2);
+  }
 };
 
+// Draws a rectangle as provided in game coordinates, translating game
+// coordinates to viewport coordinates given the expected matrix
 Renderer.prototype._fillRect = function(x, y, width, height) {
   var board = this._gameState.getBoard();
   this._context.fillRect(board.width / -2 + x, board.height / -2 + y, width, height);
@@ -101,6 +120,7 @@ Renderer.prototype._fillText = function(text, x, y) {
   this._context.restore();
 };
 
+// Clear the canvas and set the width and height to the provided dimensions
 Renderer.prototype._setSize = function() {
   var board = this._gameState.getBoard();
   if (board.orientation) {

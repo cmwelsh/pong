@@ -3,6 +3,8 @@
 
 window.pong = window.pong || {};
 
+// The logic class checks the current state of the game and updates the state
+// based on player input and time-based world logic
 function Logic(options) {
   if (typeof options !== 'object') {
     throw new Error('Must pass options into Logic');
@@ -13,11 +15,14 @@ function Logic(options) {
   this._gameState = options.gameState;
 }
 
+// Perform logic and update game state
 Logic.prototype.tick = function() {
   this._tickPaddles();
   this._tickBall();
 };
 
+// Check if the ball is at the correct y position to collide with the specified
+// player's paddle
 Logic.prototype._isPaddleHit = function(playerSlug) {
   var ballPosition = this._gameState.getBallPosition();
   var ballRadius = this._gameState.getBallRadius();
@@ -35,6 +40,8 @@ Logic.prototype._isPaddleHit = function(playerSlug) {
   return true;
 };
 
+// Check if the player is elligible for a speed hit. A speed hit is when they
+// tap the screen just before the ball hits their paddle
 Logic.prototype._isSpeedHit = function(playerSlug) {
   var lastTap = this._gameState.getLastTap(playerSlug);
 
@@ -45,6 +52,7 @@ Logic.prototype._isSpeedHit = function(playerSlug) {
   return false;
 };
 
+// Update the ball position and check for collisions and scoring
 Logic.prototype._tickBall = function() {
   var ballRadius = this._gameState.getBallRadius();
   var board = this._gameState.getBoard();
@@ -90,6 +98,8 @@ Logic.prototype._tickBall = function() {
   }
 };
 
+// Update the specified player's paddle position every tick based on their
+// previous touch actions
 Logic.prototype._tickPaddle = function(playerSlug) {
   var board = this._gameState.getBoard();
   var touches = this._gameState.getTouches(playerSlug);
@@ -110,6 +120,7 @@ Logic.prototype._tickPaddle = function(playerSlug) {
   }
 };
 
+// Update the paddle position for each player
 Logic.prototype._tickPaddles = function() {
   this._tickPaddle('playerOne');
   this._tickPaddle('playerTwo');

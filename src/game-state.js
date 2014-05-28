@@ -3,6 +3,9 @@
 
 window.pong = window.pong || {};
 
+// The game state holds all of the state of the game and inputs. It provides
+// translation between "real-world" browser coordinates and "game world" board
+// coordinates.
 function GameState() {
   this._state = {
     board: {
@@ -26,6 +29,7 @@ function GameState() {
   this.resetBall();
 }
 
+// Clear assigned player's touch input history
 GameState.prototype.touchEnd = function(touch) {
   var x, y;
   var board = this._state.board;
@@ -53,6 +57,7 @@ GameState.prototype.touchEnd = function(touch) {
   }
 };
 
+// Record touch move event
 GameState.prototype.touchMove = function(touch) {
   var x, y;
   var board = this._state.board;
@@ -80,6 +85,8 @@ GameState.prototype.touchMove = function(touch) {
   }
 };
 
+// A touch was started, clear the assigned player's previous touch inputs and
+// record the touch position
 GameState.prototype.touchStart = function(touch) {
   var x, y;
   var board = this._state.board;
@@ -111,46 +118,58 @@ GameState.prototype.touchStart = function(touch) {
   }
 };
 
+// Get the ball x and y position
 GameState.prototype.getBallPosition = function() {
   return this._state.ball.position;
 };
 
+// Get the ball radius
 GameState.prototype.getBallRadius = function() {
   return this._state.ball.radius;
 };
 
+// Get the ball x and y velocity
 GameState.prototype.getBallVelocity = function() {
   return this._state.ball.velocity;
 };
 
+// Get the board width, height, and orientation
 GameState.prototype.getBoard = function() {
   return this._state.board;
 };
 
+// Get the time in milliseconds of last finger tap by user
 GameState.prototype.getLastTap = function(playerSlug) {
   return this._lastTap[playerSlug];
 };
 
+// Get paddle height in pixels
 GameState.prototype.getPaddleHeight = function() {
-  return this._state.board.height / 7;
+  return this._state.board.height / 5;
 };
 
+// Get paddle positions for both players
 GameState.prototype.getPaddles = function() {
   return this._state.paddles;
 };
 
+// Get score for both players
 GameState.prototype.getScore = function() {
   return this._state.score;
 };
 
+// Get all recent touch events for the specified player
 GameState.prototype.getTouches = function(playerSlug) {
   return this._touches[playerSlug];
 };
 
+// Increase the specified player's score by 1
 GameState.prototype.increaseScore = function(playerSlug) {
   this._state.score[playerSlug] += 1;
 };
 
+// Reset the ball and paddles to their default positions in order to start a
+// new round of pong.
 GameState.prototype.resetBall = function() {
   var board = this._state.board;
 
@@ -168,7 +187,7 @@ GameState.prototype.resetBall = function() {
       x: (Math.round(Math.random()) ? 1 : -1) * velocityX,
       y: (Math.round(Math.random()) ? 1 : -1) * velocityY
     },
-    radius: 3
+    radius: 8
   };
 
   this._state.paddles = {
@@ -177,6 +196,9 @@ GameState.prototype.resetBall = function() {
   };
 };
 
+// Respond to browser resize events by translating the current state of the
+// game to the new viewport size, and rotate the display of the game based
+// on either viewport width or height being larger.
 GameState.prototype.resize = function(options) {
   var newWidth, newHeight;
   var oldWidth = this._state.board.width;

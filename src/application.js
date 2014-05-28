@@ -8,6 +8,8 @@ var Logic = window.pong.Logic;
 var Renderer = window.pong.Renderer;
 var util = window.pong.util;
 
+// The application class is the top level class for the game, holding all
+// functions and state for the game as encapsulated/composed data
 function Application(options) {
   if (typeof options !== 'object') {
     throw new Error('Must pass options into application');
@@ -15,7 +17,9 @@ function Application(options) {
   if (!options.canvas) {
     throw new Error('Must pass canvas option into application');
   }
+
   this._canvas = options.canvas;
+
   this._gameState = new GameState();
   this._logic = new Logic({
     gameState: this._gameState
@@ -29,26 +33,27 @@ function Application(options) {
   this._resize = util.throttle(this._resize.bind(this), 100);
 }
 
+// Update game state and render canvas
 Application.prototype.render = function() {
+  // Queue up next render
   window.requestAnimationFrame(this.render);
 
+  // Update game logic
   this._logic.tick();
+
+  // Render game state
   this._renderer.render();
 };
 
-Application.prototype._resize = function() {
-  //console.log(window.orientation);
-  this._gameState.resize({
-    width: window.innerWidth,
-    height: window.innerHeight
-  });
-  this._renderer.resize();
-};
-
+// Initialize game state and start render loop
 Application.prototype.run = function() {
   var mousedown = false;
+
+  // Resize events
   window.addEventListener('resize', this._resize, false);
   window.addEventListener('orientationchange', this._resize, false);
+
+  // Mouse/touch input events
   document.addEventListener('mousedown', function(event) {
     event.preventDefault();
     mousedown = true;
@@ -107,8 +112,18 @@ Application.prototype.run = function() {
     }.bind(this));
   }.bind(this), false);
 
+  // Initialize viewport
   this._resize();
+  // Start render loop
   this.render();
+};
+
+// Update game state with new viewport geometry
+Application.prototype._resize = function(event) {
+  this._gameState.resize({
+    width: window.innerWidth,
+    height: window.innerHeight
+  });
 };
 
 window.pong.Application = Application;
