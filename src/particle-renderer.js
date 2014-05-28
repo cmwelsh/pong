@@ -56,7 +56,7 @@ ParticleRenderer.prototype._createParticle = function(existingParticle) {
   var ballVelocity = this._gameState.getBallVelocity();
   var ballAngle = Math.atan2(ballVelocity.y * -1, ballVelocity.x * -1);
   var angleAdjustment = (Math.random() * (Math.PI / 4));
-  if (Math.floor(Math.random())) {
+  if (Math.round(Math.random())) {
     angleAdjustment *= -1;
   }
   ballAngle += angleAdjustment;
