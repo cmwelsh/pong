@@ -189,7 +189,7 @@ GameState.prototype.resetBall = function() {
       x: (Math.round(Math.random()) ? 1 : -1) * velocityX,
       y: (Math.round(Math.random()) ? 1 : -1) * velocityY
     },
-    radius: 16
+    radius: 4
   };
 
   this._state.paddles = {
