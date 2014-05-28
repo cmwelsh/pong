@@ -3,22 +3,24 @@
 
 window.pong = window.pong || {};
 
+var ParticleRenderer = window.pong.ParticleRenderer;
+var RendererMixin = window.pong.RendererMixin;
+var util = window.pong.util;
+
 // Renders the game state to the provided canvas with orientation modifications
 // applied to the scene.
 function Renderer(options) {
-  if (typeof options !== 'object') {
-    throw new Error('Must pass options into Renderer');
-  }
-  if (!options.canvas) {
-    throw new Error('Must pass canvas into Renderer');
-  }
-  if (!options.gameState) {
-    throw new Error('Must pass gameState into Renderer');
-  }
   this._canvas = options.canvas;
   this._context = this._canvas.getContext('2d');
   this._gameState = options.gameState;
+  this._particleRenderer = new ParticleRenderer({
+    context: this._context,
+    gameState: this._gameState
+  });
+  this._ballColor = util.randomColor();
 }
+
+util.extend(Renderer.prototype, RendererMixin);
 
 // Renders the game scene
 Renderer.prototype.render = function() {
@@ -40,14 +42,23 @@ Renderer.prototype.render = function() {
   this._context.fillStyle = 'rgb(200,0,0)';
   this._context.font = '20px Georgia';
 
-  // Draw ball
-  this._drawBall();
   // Draw center dividing line
   this._drawLine();
   // Draw player paddles
   this._drawPaddles();
   // Draw scoreboard
   this._drawScore();
+
+  // Draw particles
+  this._particleRenderer.render();
+
+  // Draw ball
+  this._drawBall();
+};
+
+// Notify the particle renderer that the world has changed size
+Renderer.prototype.resize = function() {
+  this._particleRenderer.resize();
 };
 
 // Draw the pong ball
@@ -55,6 +66,7 @@ Renderer.prototype._drawBall = function() {
   var ballRadius = this._gameState.getBallRadius();
   var position = this._gameState.getBallPosition();
 
+  this._context.fillStyle = this._ballColor;
   this._fillRect(position.x - ballRadius, position.y - ballRadius, ballRadius * 2, ballRadius * 2);
 };
 
@@ -92,37 +104,10 @@ Renderer.prototype._drawScore = function() {
   }
 };
 
-// Draws a rectangle as provided in game coordinates, translating game
-// coordinates to viewport coordinates given the expected matrix
-Renderer.prototype._fillRect = function(x, y, width, height) {
-  var board = this._gameState.getBoard();
-  this._context.fillRect(board.width / -2 + x, board.height / -2 + y, width, height);
-};
-
-// Always draws text so it's right-side up when viewed on the emulator
-Renderer.prototype._fillText = function(text, x, y) {
-  var board = this._gameState.getBoard();
-
-  // Save the old drawing context
-  this._context.save();
-
-  if (board.orientation) {
-    // Center the canvas on the text location
-    this._context.translate(board.width / -2 + x, board.height / -2 + y);
-    // Rotate drawing 90 degrees
-    this._context.rotate(Math.PI / 2);
-  } else {
-    this._context.translate(board.width / -2 + x, board.height / -2 + y);
-  }
-
-  this._context.fillText(text, 0, 0);
-
-  this._context.restore();
-};
-
 // Clear the canvas and set the width and height to the provided dimensions
 Renderer.prototype._setSize = function() {
   var board = this._gameState.getBoard();
+
   if (board.orientation) {
     this._canvas.height = board.width;
     this._canvas.width = board.height;

@@ -8,12 +8,6 @@ var GameState = window.pong.GameState;
 // The logic class checks the current state of the game and updates the state
 // based on player input and time-based world logic
 function Logic(options) {
-  if (typeof options !== 'object') {
-    throw new Error('Must pass options into Logic');
-  }
-  if (!options.gameState) {
-    throw new Error('Must pass gameState into Logic');
-  }
   this._gameState = options.gameState;
 }
 

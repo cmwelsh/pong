@@ -11,13 +11,6 @@ var util = window.pong.util;
 // The application class is the top level class for the game, holding all
 // functions and state for the game as encapsulated/composed data
 function Application(options) {
-  if (typeof options !== 'object') {
-    throw new Error('Must pass options into application');
-  }
-  if (!options.canvas) {
-    throw new Error('Must pass canvas option into application');
-  }
-
   this._canvas = options.canvas;
 
   this._gameState = new GameState();
@@ -124,6 +117,7 @@ Application.prototype._resize = function(event) {
     width: window.innerWidth,
     height: window.innerHeight
   });
+  this._renderer.resize();
 };
 
 window.pong.Application = Application;
