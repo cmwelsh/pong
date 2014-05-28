@@ -31,10 +31,10 @@ Logic.prototype._isPaddleHit = function(playerSlug) {
   var paddleY = board.height * paddles[playerSlug];
   var paddleHeight = this._gameState.getPaddleHeight();
 
-  if (ballPosition.y - ballRadius < paddleY - (paddleHeight / 2)) {
+  if (ballPosition.y + ballRadius < paddleY - (paddleHeight / 2)) {
     return false;
   }
-  if (ballPosition.y + ballRadius > paddleY + (paddleHeight / 2)) {
+  if (ballPosition.y - ballRadius > paddleY + (paddleHeight / 2)) {
     return false;
   }
   return true;
