@@ -63,8 +63,10 @@ Logic.prototype._tickBall = function() {
       position.x = board.width - ballRadius - GameState.PADDLE_WIDTH;
       if (this._isSpeedHit('playerTwo')) {
         velocity.x *= -2;
+        velocity.y += Math.random() * 2 - 1;
       } else {
         velocity.x *= -1;
+        velocity.y += Math.random() * 2 - 1;
       }
     } else {
       this._gameState.increaseScore('playerOne');
