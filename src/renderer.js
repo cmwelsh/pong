@@ -80,9 +80,25 @@ Renderer.prototype._fillRect = function(x, y, width, height) {
   this._context.fillRect(board.width / -2 + x, board.height / -2 + y, width, height);
 };
 
+// Always draws text so it's right-side up when viewed on the emulator
 Renderer.prototype._fillText = function(text, x, y) {
   var board = this._gameState.getBoard();
-  this._context.fillText(text, board.width / -2 + x, board.height / -2 + y);
+
+  // Save the old drawing context
+  this._context.save();
+
+  if (board.orientation) {
+    // Center the canvas on the text location
+    this._context.translate(board.width / -2 + x, board.height / -2 + y);
+    // Rotate drawing 90 degrees
+    this._context.rotate(Math.PI / 2);
+  } else {
+    this._context.translate(board.width / -2 + x, board.height / -2 + y);
+  }
+
+  this._context.fillText(text, 0, 0);
+
+  this._context.restore();
 };
 
 Renderer.prototype._setSize = function() {
