@@ -3,6 +3,8 @@
 
 window.pong = window.pong || {};
 
+var GameState = window.pong.GameState;
+
 // The logic class checks the current state of the game and updates the state
 // based on player input and time-based world logic
 function Logic(options) {
@@ -62,9 +64,9 @@ Logic.prototype._tickBall = function() {
   position.x += velocity.x;
   position.y += velocity.y;
 
-  if (position.x > board.width - ballRadius) {
+  if (position.x > board.width - ballRadius - GameState.PADDLE_WIDTH) {
     if (this._isPaddleHit('playerTwo')) {
-      position.x = board.width - ballRadius;
+      position.x = board.width - ballRadius - GameState.PADDLE_WIDTH;
       if (this._isSpeedHit('playerTwo')) {
         velocity.x *= -2;
       } else {
@@ -75,9 +77,9 @@ Logic.prototype._tickBall = function() {
       this._gameState.resetBall();
     }
   }
-  if (position.x < ballRadius) {
+  if (position.x < ballRadius + GameState.PADDLE_WIDTH) {
     if (this._isPaddleHit('playerOne')) {
-      position.x = ballRadius;
+      position.x = ballRadius + GameState.PADDLE_WIDTH;
       if (this._isSpeedHit('playerOne')) {
         velocity.x *= -2;
       } else {

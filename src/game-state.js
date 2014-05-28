@@ -29,6 +29,8 @@ function GameState() {
   this.resetBall();
 }
 
+GameState.PADDLE_WIDTH = 4;
+
 // Clear assigned player's touch input history
 GameState.prototype.touchEnd = function(touch) {
   var x, y;
