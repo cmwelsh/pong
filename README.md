@@ -3,6 +3,9 @@
 This is a basic demo of how to create a game of pong with JavaScript and HTML
 2D Canvas Context.
 
+A live demo is available online at http://pong.cwelsh.com if you're
+interested in taking a look.
+
 ## Controls
 
 The controls are shared between both players on the same device, so it works
